@@ -22,21 +22,24 @@ def load_data(spark, file_path):
     df = spark.read.csv(file_path, header=True, schema=schema)
     return df
 
-def identify_churn_risk_users(df):
+def detect_churn_risk(df):
     """
-    Identify users with canceled subscriptions and low watch time (<100 minutes).
+    Identify users at risk of churn (Canceled subscription and low watch time).
+    """
+    churn_risk_users = df.filter((col("SubscriptionStatus") == "Canceled") & (col("WatchTime") < 100))
+    
+    churn_risk_count = churn_risk_users.count()
+    total_users_count = df.count()
+    
+    return churn_risk_count, total_users_count
 
-    TODO: Implement the following steps:
-    1. Filter users where `SubscriptionStatus = 'Canceled'` AND `WatchTime < 100`.
-    2. Count the number of such users.
+def write_output(churn_risk_count, output_path):
     """
-    pass  # Remove this line after implementation
-
-def write_output(result_df, output_path):
+    Write the result in the required format to a CSV file.
     """
-    Write the result DataFrame to a CSV file.
-    """
-    result_df.coalesce(1).write.csv(output_path, header=True, mode='overwrite')
+    with open(output_path, 'w') as f:
+        f.write("Churn Risk Users,Total Users\n")
+        f.write(f"Users with low watch time & canceled subscriptions,{churn_risk_count}\n")
 
 def main():
     """
@@ -44,12 +47,12 @@ def main():
     """
     spark = initialize_spark()
 
-    input_file = "/workspaces/MovieRatingsAnalysis/input/movie_ratings_data.csv"
-    output_file = "/workspaces/MovieRatingsAnalysis/outputs/churn_risk_users.csv"
+    input_file = "input/movie_ratings_data.csv"
+    output_file = "Outputs/churn_risk_users.csv"
 
     df = load_data(spark, input_file)
-    result_df = identify_churn_risk_users(df)  # Call function here
-    write_output(result_df, output_file)
+    churn_risk_count, total_users_count = detect_churn_risk(df)
+    write_output(churn_risk_count, output_file)
 
     spark.stop()
 

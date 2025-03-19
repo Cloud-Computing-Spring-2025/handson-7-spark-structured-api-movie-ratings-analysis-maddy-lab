@@ -267,26 +267,37 @@ A summary of **movie-watching trends** over the years, indicating peak years for
 
 ---
 
-## **Grading Criteria**
 
-Your assignment will be evaluated based on the following criteria:
 
-- **Question 1**: Correct identification of departments with over 50% high satisfaction and engagement (1 mark).
-- **Question 2**: Accurate analysis of employees who feel valued but didn’t suggest improvements, including proportion (1 mark).
-- **Question 3**: Proper comparison of engagement levels across job titles and correct identification of the top-performing job title (1 mark).
 
-**Total Marks: 3**
+MY APPROACH
 
----
 
-## **Submission Guidelines**
+Approach for Task 1:
+Task 1 uses PySpark to:
 
-- **Code**: Submit all your PySpark scripts located in the `src/` directory.
-- **Report**: Include a report summarizing your findings for each task. Ensure that your report is well-structured, with clear headings and explanations.
-- **Data**: Ensure that the `movie_ratings_data.csv` used for analysis is included in the `data/` directory or provide a script for data generation if applicable.
-- **Format**: Submit your work in a zipped folder containing all necessary files.
-- **Deadline**: [Insert Deadline Here]
+Initialize a SparkSession.
+Load the dataset (movie_ratings_data.csv) into a Spark DataFrame with a custom schema.
+Filter the users who have IsBingeWatched = True to identify binge-watchers.
+Group the data by AgeGroup and count the binge-watchers in each group.
+Calculate the percentage of binge-watchers in each age group.
+Save the results to Outputs/binge_watching_patterns.csv.
 
----
+Approach for Task 2:
+Task 2 focuses on identifying churn risk users:
 
-Good luck, and happy analyzing!
+Initialize a SparkSession.
+Load the dataset (movie_ratings_data.csv) into a Spark DataFrame with a predefined schema.
+Filter users whose SubscriptionStatus = 'Canceled' and WatchTime < 100 to find users at risk of churn.
+Count the total number of churn risk users.
+Write the result to Outputs/churn_risk_users.csv in the format:
+"Users with low watch time & canceled subscriptions, [count]"
+
+Approach for Task 3:
+Task 3 involves analyzing movie-watching trends:
+
+Initialize a SparkSession.
+Load the dataset (movie_ratings_data.csv) into a Spark DataFrame.
+Group the data by WatchedYear and count the number of movies watched in each year.
+Sort the years based on the number of movies watched in descending order.
+Write the result to Outputs/movie_watching_trends.csv.
